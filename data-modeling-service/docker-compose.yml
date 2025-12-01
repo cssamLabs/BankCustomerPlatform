@@ -1,0 +1,81 @@
+version: "3.8"
+
+services:
+  datamodeling-app:
+    # Use the image name we defined in the Dockerfile build step earlier
+    image: datamodeling:0.0.1-SNAPSHOT
+    container_name: datamodeling-app
+    # Map local port 8080 to the container's 8080
+    ports:
+      - "8080:8080"
+    environment:
+      # Pass the host IP for the Kafka producer (if the app acts as a producer too)
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-db:5432/datamodelingdb
+      SPRING_DATASOURCE_USERNAME: youruser # Update these credentials
+      SPRING_DATASOURCE_PASSWORD: yourpassword # Update these credentials
+    depends_on:
+      - postgres-db
+      - kafka
+    # Mount a local directory to a container path for simulating staged data input/output
+    volumes:
+      #  - ./local_data_staging:/opt/data/staging
+      - /Users/chandimasamaraweera/DevelopmentEnvs/BankCustomerPlatform/data-modeling-service/local_data_staging:/opt/data/staging
+    networks:
+      - bank-network
+
+  postgres-db:
+    image: postgres:14-alpine
+    container_name: postgres-db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: datamodelingdb
+      POSTGRES_USER: youruser
+      POSTGRES_PASSWORD: yourpassword
+    # Use a volume for data persistence even if the container is removed
+    volumes:
+      - postgres-data-volume:/var/lib/postgresql/data
+    networks:
+      - bank-network
+
+  # Placeholder for Kafka and Zookeeper (you would need full configs for these)
+  kafka:
+    image: confluentinc/cp-kafka:7.0.0
+    container_name: kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092" # External port for host machine access
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+      # --- ADD THIS REQUIRED ENVIRONMENT VARIABLE BACK ---
+      # It must match the definitions in KAFKA_LISTENERS
+      KAFKA_LISTENERS: INTERNAL://kafka:29092,EXTERNAL://localhost:9092
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:29092,EXTERNAL://localhost:9092
+      # ----------------------------------------------------
+    networks:
+      - bank-network
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.0.0
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    networks:
+      - bank-network
+
+# Define volumes and networks
+volumes:
+  postgres-data-volume:
+  local_data_staging:
+
+networks:
+  bank-network:
+    driver: bridge
