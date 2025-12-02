@@ -1,4 +1,4 @@
-```
+
 # Bank Customer Platform Monorepo
 
 This repository hosts all microservices and the web frontend for the "Hibersoft MS Bank Customer Platform". The platform is designed to ingest raw banking data, model customer behavior using high-performance batch processing, analyze the results with GPU acceleration, and visualize the outcomes.
@@ -7,9 +7,7 @@ This repository hosts all microservices and the web frontend for the "Hibersoft 
 
 This is a monorepo containing multiple independent projects:
 
-```
 
-Use code with caution.
 
 | Service Name              | Description                                                                                          | Language/Framework     | Status         |
 | ------------------------- | ---------------------------------------------------------------------------------------------------- | ---------------------- | -------------- |
