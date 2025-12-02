@@ -1,4 +1,3 @@
-
 # Bank Customer Platform Monorepo
 
 This repository hosts all microservices and the web frontend for the "Hibersoft MS Bank Customer Platform". The platform is designed to ingest raw banking data, model customer behavior using high-performance batch processing, analyze the results with GPU acceleration, and visualize the outcomes.
@@ -6,7 +5,6 @@ This repository hosts all microservices and the web frontend for the "Hibersoft 
 ## Project Structure
 
 This is a monorepo containing multiple independent projects:
-
 
 
 | Service Name              | Description                                                                                          | Language/Framework     | Status         |
@@ -29,7 +27,6 @@ Prerequisites
    ```
    ./gradlew bootBuildImage
    ```
-
 2. **Ensure Docker Login:**
    Make sure you are logged into Docker Hub: `docker login`
 
@@ -40,12 +37,13 @@ From the root of this monorepo, deploy the entire stack using `docker-compose`:
 bash
 
 ```
-docker-compose up -d
+docker compose up -d
 ```
 
 Endpoints (Data Modelling Service)
 
 The Data Modelling service is available at `http://localhost:8080`.
+
 
 | Endpoint                           | Method | Description                                          | Example URL                                           |
 | ---------------------------------- | ------ | ---------------------------------------------------- | ----------------------------------------------------- |

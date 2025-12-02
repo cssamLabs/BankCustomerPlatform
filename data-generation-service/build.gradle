@@ -1,0 +1,50 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.5.8'
+	id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'com.hibersoft.ms.bankcustomer'
+version = '0.0.1-SNAPSHOT'
+description = 'DataGenerationService micro-services'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(21)
+	}
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	// --- Standard Runtime Dependencies (Managed by Spring Boot BOM) ---
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+
+	
+	// Database Driver (PostgreSQL is runtime only)
+    runtimeOnly 'org.postgresql:postgresql'
+    testImplementation 'com.h2database:h2'
+
+	// Lombok Configuration (Requires explicit version if not managed by a separate BOM)
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	
+	// --- Standard Test Dependencies (Managed by Spring Boot BOM) ---
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	// Test specific utility scope
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
