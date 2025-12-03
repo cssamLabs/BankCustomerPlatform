@@ -6,7 +6,7 @@ plugins {
 
 group = 'com.hibersoft.ms.bankcustomer'
 version = '0.0.1-SNAPSHOT'
-description = 'HS BankCustomer DataGenerationService'
+description = 'HS BankCustomer DataAnalyticsService'
 
 java {
 	toolchain {
@@ -22,26 +22,23 @@ configurations {
 
 repositories {
 	mavenCentral()
+	maven { url = 'repo.spring.io' } 
+    maven { url = 'https://repo.spring.io/snapshot' } // Add this line
+    maven { url = 'https://repo.spring.io/milestone' } // Optional, but good practice for newer versions
 }
 
 dependencies {
-	// --- Standard Runtime Dependencies (Managed by Spring Boot BOM) ---
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-
 	
-	// Database Driver (PostgreSQL is runtime only)
-    runtimeOnly 'org.postgresql:postgresql'
-    testImplementation 'com.h2database:h2'
+	runtimeOnly 'org.postgresql:postgresql'
+	testImplementation 'com.h2database:h2'
 
-	// Lombok Configuration (Requires explicit version if not managed by a separate BOM)
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
-	
-	// --- Standard Test Dependencies (Managed by Spring Boot BOM) ---
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	// Test specific utility scope
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 

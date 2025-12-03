@@ -1,0 +1,10 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        mavenCentral() // Shorthand for Maven Central URL
+        maven { url = 'https://repo.spring.io/snapshot' } // The Spring Snapshot repo
+        maven { url = 'https://repo.spring.io/milestone' } // The Spring Milestone repo
+    }
+}
+
+rootProject.name = 'hs-bank-customer-platform-analytics-service'

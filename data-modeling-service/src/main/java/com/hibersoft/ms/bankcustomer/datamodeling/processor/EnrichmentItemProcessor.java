@@ -80,7 +80,12 @@ public class EnrichmentItemProcessor implements ItemProcessor<EnrichedBankTransa
     public FactTransactionEntity process(final EnrichedBankTransaction transaction) throws Exception {
         String bankAccountId = transaction.getBankSpecificAccountId();
 
+        // --- Add detailed logging here ---
+        log.info("Processing account ID: {}", bankAccountId);
+        // --- ----------------------- ---
+
         if (bankAccountId == null || bankAccountId.isEmpty()) {
+            log.warn("Skipping transaction due to empty account ID.");
             transaction.setIsValid(false);
             return null;
         }
