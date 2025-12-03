@@ -11,7 +11,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+
 import java.util.Map;
+import java.util.Arrays;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,6 +45,32 @@ public class JobTriggerController {
         return ResponseEntity.ok(Map.of(
             "status", "STARTED",
             "message", "Simple ingestion job launched for " + bankId
+        ));
+    }
+
+    @PostMapping("/start-all")
+    public ResponseEntity<Map<String, String>> startJobForAllBanks() {
+        log.info("API requested job launch for all banks");
+        
+        // In a real scenario, this would dynamically get a list of bank IDs
+        List<String> allBankIds = Arrays.asList("BANK_A", "BANK_B"); // Example list
+        
+        allBankIds.forEach(bankId -> {
+            JobParameters jobParameters = new JobParametersBuilder()
+                    .addString("bankId", bankId)
+                    .addLong("run.id", System.currentTimeMillis() + bankId.hashCode())
+                    .toJobParameters();
+            try {
+                jobLauncher.run(ingestBankDataJob, jobParameters);
+                log.info("Job launched for Bank ID: {}", bankId);
+            } catch (Exception e) {
+                log.error("Failed to launch job for Bank ID: {}", bankId, e);
+            }
+        });
+
+        return ResponseEntity.ok(Map.of(
+            "status", "STARTED",
+            "message", "Ingestion job launched for all configured banks"
         ));
     }
 }
