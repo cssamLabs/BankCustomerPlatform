@@ -45,9 +45,9 @@ services:
       - bank-network
 
   # --- DATA MODELING SERVICE ---
-  datamodeling-app:
-    image: datamodeling:0.0.1-SNAPSHOT # Use the image name we defined in the Dockerfile build step earlier
-    container_name: datamodeling-app
+  batch-datamodeling-app:
+    image: hs-bank-customer-batch-datamodeling-services:0.0.1-SNAPSHOT # Use the image name we defined in the Dockerfile build step earlier
+    container_name: batch-datamodeling-app
     ports:
       - "8080:8080" # Map local port 8080 to the container's 8080
     environment:
@@ -62,13 +62,13 @@ services:
     # Mount a local directory to a container path for simulating staged data input/output
     volumes:
       #  - ./local_data_staging:/opt/data/staging
-      - /Users/chandimasamaraweera/DevelopmentEnvs/BankCustomerPlatform/data-modeling-service/local_data_staging:/opt/data/staging
+      - /Users/chandimasamaraweera/DevelopmentEnvs/BankCustomerPlatform/local_data_staging:/opt/data/staging
     networks:
       - bank-network
   # -------------------------------------------
   # --- DATA GENERATION SERVICE ---
   data-generation-app:
-    image: datageneration:0.0.1-SNAPSHOT # Use the image name we defined in the Dockerfile build step earlier
+    image: hs-bank-customer-datageneration-services:0.0.1-SNAPSHOT # Use the image name we defined in the Dockerfile build step earlier
     container_name: datageneration-app
     ports:
       - "8081:8080" # Maps the internal port 8080 to external port 8081

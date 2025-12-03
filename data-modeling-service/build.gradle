@@ -6,7 +6,7 @@ plugins {
 
 group = 'com.hibersoft.ms.bankcustomer'
 version = '0.0.1-SNAPSHOT'
-description = 'datamodeling micro-services'
+description = 'HS BankCustomer Datamodeling Services'
 
 java {
 	toolchain {
