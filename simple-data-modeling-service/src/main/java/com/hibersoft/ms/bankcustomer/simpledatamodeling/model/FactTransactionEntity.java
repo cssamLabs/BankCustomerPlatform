@@ -1,4 +1,4 @@
-package com.hibersoft.ms.bankcustomer.datamodeling.model;
+package com.hibersoft.ms.bankcustomer.simpledatamodeling.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

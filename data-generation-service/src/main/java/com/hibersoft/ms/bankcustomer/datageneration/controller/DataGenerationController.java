@@ -23,11 +23,6 @@ public class DataGenerationController {
             @PathVariable String bankId,
             @RequestParam(defaultValue = "100") int count) {
         
-        // Validation for BANK_A (as service currently only supports the bank_a_transactions table)
-        if (!"BANK_A".equals(bankId)) {
-            return ResponseEntity.badRequest().body(Map.of("status", "error", "message", "Only BANK_A is supported in this implementation."));
-        }
-
         int generatedCount = generationService.generateData(bankId, count);
         
         return ResponseEntity.ok(Map.of(

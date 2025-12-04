@@ -1,20 +1,25 @@
-package com.hibersoft.ms.bankcustomer.datamodeling;
+package com.hibersoft.ms.bankcustomer.simpledatamodeling;
 
-import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
+import org.springframework.batch.test.context.SpringBatchTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.batch.test.context.SpringBatchTest;
-import com.hibersoft.ms.bankcustomer.datamodeling.config.BatchConfiguration; 
-import org.springframework.context.annotation.Import; 
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 
+import javax.sql.DataSource;
+import org.springframework.batch.core.JobParametersBuilder;
+import org.springframework.batch.item.database.JdbcCursorItemReader;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+import com.hibersoft.ms.bankcustomer.simpledatamodeling.config.BatchConfiguration;
+import com.hibersoft.ms.bankcustomer.simpledatamodeling.model.RawSourceData;
 
 @SpringBootTest
 @ActiveProfiles("test") 

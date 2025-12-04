@@ -16,40 +16,40 @@ services:
       - bank-network
 
   # Placeholder for Kafka and Zookeeper (you would need full configs for these)
-  kafka:
-    image: confluentinc/cp-kafka:7.0.0
-    container_name: kafka
-    depends_on:
-      - zookeeper
-    ports:
-      - "9092:9092" # External port for host machine access
-    environment:
-      KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
-      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_LISTENERS: INTERNAL://kafka:29092,EXTERNAL://localhost:9092
-      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:29092,EXTERNAL://localhost:9092
-      # ----------------------------------------------------
-    networks:
-      - bank-network
+  # kafka:
+  #   image: confluentinc/cp-kafka:7.0.0
+  #   container_name: kafka
+  #   depends_on:
+  #     - zookeeper
+  #   ports:
+  #     - "9092:9092" # External port for host machine access
+  #   environment:
+  #     KAFKA_BROKER_ID: 1
+  #     KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+  #     KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+  #     KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+  #     KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+  #     KAFKA_LISTENERS: INTERNAL://kafka:29092,EXTERNAL://localhost:9092
+  #     KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:29092,EXTERNAL://localhost:9092
+  #     # ----------------------------------------------------
+  #   networks:
+  #     - bank-network
 
-  zookeeper:
-    image: confluentinc/cp-zookeeper:7.0.0
-    container_name: zookeeper
-    environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
-      ZOOKEEPER_TICK_TIME: 2000
-    networks:
-      - bank-network
+  # zookeeper:
+  #   image: confluentinc/cp-zookeeper:7.0.0
+  #   container_name: zookeeper
+  #   environment:
+  #     ZOOKEEPER_CLIENT_PORT: 2181
+  #     ZOOKEEPER_TICK_TIME: 2000
+  #   networks:
+  #     - bank-network
 
   # --- DATA MODELING SERVICE ---
-  # batch-datamodeling-app:
-  #   image: hs-bank-customer-batch-datamodeling-services:0.0.1-SNAPSHOT # Use the image name we defined in the Dockerfile build step earlier
-  #   container_name: batch-datamodeling-app
+  # datamodeling-app:
+  #   image: hs-bank-customer-datamodeling-services:0.0.1-SNAPSHOT # Use the image name we defined in the Dockerfile build step earlier
+  #   container_name: datamodeling-app
   #   ports:
-  #     - "8080:8080" # Map local port 8080 to the container's 8080
+  #     - "8080:8080"
   #   environment:
   #     # Pass the host IP for the Kafka producer (if the app acts as a producer too)
   #     SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
@@ -100,19 +100,19 @@ services:
   # -------------------------------------------
 # --- SIMPLE DATA MODELLING SERVICE ---
   simple-data-modeling-app:
-    image: hs-bank-customer-simple-datamodeling-services:0.0.1-SNAPSHOT # Use the image name from the bootBuildImage task
+    image: hs-bank-customer-simpledatamodeling-services:0.0.1-SNAPSHOT # Use the image name from the bootBuildImage task
     container_name: simple-data-modeling-app
     ports:
-      - "8080:8080" # Keep the same port
+      - "8083:8080" # Keep the same port
     depends_on:
       - postgres-db
-      - kafka
+      # - kafka
     environment:
       # Use the internal service names for connections
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-db:5432/datamodelingdb
       SPRING_DATASOURCE_USERNAME: youruser # Use your credentials
       SPRING_DATASOURCE_PASSWORD: yourpassword # Use your credentials
-      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      # SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
     volumes:
       # Keep your staging data volume mount
       - ./local_data_staging:/opt/data/staging

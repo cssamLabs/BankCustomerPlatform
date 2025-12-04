@@ -5,18 +5,22 @@ import com.hibersoft.ms.bankcustomer.datageneration.repository.RawTransactionRep
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class DataGenerationService {
 
-    @Autowired
-    private RawTransactionRepository repository;
+    // @Autowired
+    // private RawTransactionRepository repository;
+    @Autowired // Autowire JdbcTemplate instead
+    private JdbcTemplate jdbcTemplate;
 
     private final Random random = new Random();
     private final String[] descriptions = {"Groceries", "Gas", "Dinner", "Online Purchase", "ATM Withdrawal", "Deposit"};
@@ -24,14 +28,15 @@ public class DataGenerationService {
 
     @Transactional
     public int generateData(String bankId, int recordCount) {
+        // ... (data generation loop creates List<RawTransactionEntity> data) ...
         List<RawTransactionEntity> data = new ArrayList<>();
-        
-        // Note: This service currently targets only 'bank_a_transactions' via the @Table annotation.
-        // For different banks (BANK_B), you would need to dynamically change the table name
-        // or use native SQL/JdbcTemplate to insert into the correct table dynamically.
-        // We stick to BANK_A for now for simplicity.
+        List<Object[]> mdmBatchArgs = new ArrayList<>();
 
         for (int i = 0; i < recordCount; i++) {
+            String transactionUuid = UUID.randomUUID().toString(); 
+            String unifiedCustomerId = "U_CUST_" + bankId + "_" + random.nextInt(9000);
+            mdmBatchArgs.add(new Object[]{ transactionUuid, unifiedCustomerId }); 
+
             String accountId = "ACC" + bankId.charAt(bankId.length() - 1) + (1000 + random.nextInt(9000));
             String amount = String.format("%.2f", 10.0 + (90.0 * random.nextDouble()));
             String description = descriptions[random.nextInt(descriptions.length)];
@@ -39,7 +44,7 @@ public class DataGenerationService {
             String date = LocalDateTime.now().minusHours(random.nextInt(100)).toString();
 
             RawTransactionEntity entity = new RawTransactionEntity();
-            entity.setBankSpecificAccountId(UUID.randomUUID().toString()); // Use UUID as PK for multiple inserts
+            entity.setBankSpecificAccountId(transactionUuid); // Use UUID as PK for multiple inserts
             entity.setTransactionDate(date);
             entity.setAmount(amount);
             entity.setDescription(description);
@@ -47,7 +52,21 @@ public class DataGenerationService {
             data.add(entity);
         }
 
-        repository.saveAll(data);
+        // --- Use dynamic table name insertion via JdbcTemplate ---
+        String tableName = bankId.toLowerCase() + "_transactions";
+        String sql = "INSERT INTO " + tableName + " (bank_specific_account_id, transaction_date, amount, description, location_code) VALUES (?, ?, ?, ?, ?)";
+        
+        List<Object[]> batchArgs = data.stream().map(entity -> new Object[] {
+            entity.getBankSpecificAccountId(), entity.getTransactionDate(), entity.getAmount(), entity.getDescription(), entity.getLocationCode()
+        }).collect(Collectors.toList());
+
+        jdbcTemplate.batchUpdate(sql, batchArgs);
+        // --------------------------------------------------------
+        
+        // 2. Insert into the MDM table
+        String mdmSql = "INSERT INTO customer_mdm_entity (bank_specific_account_id, unified_customer_id) VALUES (?, ?)";
+        jdbcTemplate.batchUpdate(mdmSql, mdmBatchArgs);
+
         return data.size();
     }
 }

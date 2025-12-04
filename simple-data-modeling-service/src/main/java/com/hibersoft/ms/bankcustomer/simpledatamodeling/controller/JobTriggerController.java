@@ -1,4 +1,4 @@
-package com.hibersoft.ms.bankcustomer.datamodeling.controller;
+package com.hibersoft.ms.bankcustomer.simpledatamodeling.controller;
 
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParameters;

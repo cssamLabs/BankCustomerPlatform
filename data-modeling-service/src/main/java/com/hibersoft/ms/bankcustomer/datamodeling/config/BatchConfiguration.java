@@ -1,10 +1,12 @@
 package com.hibersoft.ms.bankcustomer.datamodeling.config;
 
-import com.hibersoft.ms.bankcustomer.datamodeling.model.FactTransactionEntity;
-import com.hibersoft.ms.bankcustomer.datamodeling.model.RawSourceData;
+// ... (imports) ...
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.batch.core.configuration.annotation.StepScope;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
@@ -13,16 +15,20 @@ import org.springframework.batch.item.database.JdbcCursorItemReader;
 import org.springframework.batch.item.database.JpaItemWriter;
 import org.springframework.batch.item.database.builder.JdbcCursorItemReaderBuilder;
 import org.springframework.batch.item.database.builder.JpaItemWriterBuilder;
+import org.springframework.orm.jpa.JpaTransactionManager; 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.transaction.PlatformTransactionManager;
 
-import jakarta.persistence.EntityManagerFactory;
-import javax.sql.DataSource;
+import com.hibersoft.ms.bankcustomer.datamodeling.model.FactTransactionEntity;
+import com.hibersoft.ms.bankcustomer.datamodeling.model.RawSourceData;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.sql.DataSource;
+import jakarta.persistence.EntityManagerFactory;
 
 @Configuration
 @EnableBatchProcessing
@@ -30,14 +36,23 @@ public class BatchConfiguration {
 
     private static final Logger log = LoggerFactory.getLogger(BatchConfiguration.class);
 
-    // Reader: Reads raw data from bank_a_transactions
+    // Reader: Reads raw data from the dynamic bank table
     @Bean
-    public JdbcCursorItemReader<RawSourceData> sourceDataReader(DataSource dataSource) {
-        log.info("Configuring source data reader with SQL: SELECT ... FROM bank_a_transactions");
+    @StepScope
+    public JdbcCursorItemReader<RawSourceData> sourceDataReader(
+        DataSource dataSource,
+        @Value("#{jobParameters['bankId']}") String bankId
+    ) {
+        log.info("Configuring source data reader dynamically for bankId: {}", bankId);
+        String tableName = bankId.toLowerCase() + "_transactions";
+        String sql = "SELECT bank_specific_account_id, transaction_date, amount, description, location_code FROM " + tableName;
+        
+        log.info("Reader SQL: {}", sql);
+
         return new JdbcCursorItemReaderBuilder<RawSourceData>()
                 .dataSource(dataSource)
-                .name("bankADatabaseReader")
-                .sql("SELECT bank_specific_account_id, transaction_date, amount, description, location_code FROM bank_a_transactions")
+                .name("bankDataReader-" + bankId) // Unique name
+                .sql(sql)
                 .rowMapper(new BeanPropertyRowMapper<>(RawSourceData.class))
                 .build();
     }
@@ -65,6 +80,14 @@ public class BatchConfiguration {
                 .build();
     }
 
+    @Bean
+    public JpaTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
+        JpaTransactionManager transactionManager = new JpaTransactionManager();
+        transactionManager.setEntityManagerFactory(entityManagerFactory);
+        return transactionManager;
+    }
+    
+
     // Step: Defines the chunk size and flow
     @Bean
     public Step ingestionStep(JobRepository jobRepository, PlatformTransactionManager transactionManager,
@@ -88,4 +111,3 @@ public class BatchConfiguration {
                 .build();
     }
 }
-
