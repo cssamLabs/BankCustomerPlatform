@@ -1,0 +1,425 @@
+{
+	"info": {
+		"_postman_id": "338498ba-418d-43d7-9d15-8829fec1f912",
+		"name": "hibersoft-Bank-Customer-Platform",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "784992",
+		"_collection_link": "https://solar-crater-650561.postman.co/workspace/2891002c-3014-4475-80bf-5b1d315b6328/collection/784992-338498ba-418d-43d7-9d15-8829fec1f912?action=share&source=collection_link&creator=784992"
+	},
+	"item": [
+		{
+			"name": "Data Generator ms health",
+			"id": "e765c673-2fa8-4c57-b9bc-2c0ce762c87d",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/actuator/health",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"actuator",
+						"health"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Data Generator ms Generate Bank B",
+			"id": "3ea949f5-2db2-49a0-a7c1-11406dcd12a6",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/api/v1/generate/bank/BANK_B?count=25",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"v1",
+						"generate",
+						"bank",
+						"BANK_B"
+					],
+					"query": [
+						{
+							"key": "count",
+							"value": "25"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Data Generator ms Generate Bank A",
+			"id": "dc377cd9-365a-451a-be4a-816a5068a2ea",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/api/v1/generate/bank/BANK_A?count=25",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"v1",
+						"generate",
+						"bank",
+						"BANK_A"
+					],
+					"query": [
+						{
+							"key": "count",
+							"value": "25"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Data Modeling ms health",
+			"id": "c217f3e9-3225-4cc0-a441-6e7cd0c29c4a",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/actuator/health",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"actuator",
+						"health"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Data Modeling ms ingestion",
+			"id": "9864062e-31a2-4718-a396-fd11d64bdb6b",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/ingestion/start-all",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"ingestion",
+						"start-all"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Simple Data Modeling ms ingestion Bank B",
+			"id": "44a6ad43-e90e-4653-baea-a0916290ef2c",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8083/api/v1/simple-ingestion/start/BANK_B",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"api",
+						"v1",
+						"simple-ingestion",
+						"start",
+						"BANK_B"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Simple Data Modeling ms ingestion All",
+			"id": "f13b7b59-3754-4c36-830b-d53c6d827d38",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8083/api/v1/simple-ingestion/start-all",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"api",
+						"v1",
+						"simple-ingestion",
+						"start-all"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Simple Data Modeling ms ingestion Bank A",
+			"id": "35f296bd-3c0f-41c8-995e-565cbc649f3a",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8083/api/v1/simple-ingestion/start/BANK_A",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"api",
+						"v1",
+						"simple-ingestion",
+						"start",
+						"BANK_A"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Simple Data Modeling ms get job status",
+			"id": "12992eab-0b10-4923-88b8-2a535fa65bf8",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8083/api/v1/simple-ingestion/status/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"api",
+						"v1",
+						"simple-ingestion",
+						"status",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Simple Data Modeling ms health",
+			"id": "14a55fad-d335-483d-8259-8941c827110d",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8083/actuator/health",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"actuator",
+						"health"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Data Analytics ms counts-by-location",
+			"id": "d169eef1-e837-4ae1-bf3d-9edfbf500573",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8082/api/v1/analytics/counts-by-location",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"api",
+						"v1",
+						"analytics",
+						"counts-by-location"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Data Analytics ms health",
+			"id": "d1159c1c-b845-4460-900f-006da8441f39",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8082/actuator/health",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"actuator",
+						"health"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Data Analytics ms spending-by-category",
+			"id": "1ce7a6ae-ec32-4bf1-99e1-907847d1757a",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8082/api/v1/analytics/spending-by-category",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"api",
+						"v1",
+						"analytics",
+						"spending-by-category"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Data Analytics ms Compare Spending Bank A",
+			"id": "55636e69-c402-465a-a677-454342604e6b",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8082/api/v1/analytics/compare-spending/bank_A",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"api",
+						"v1",
+						"analytics",
+						"compare-spending",
+						"bank_A"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Data Analytics ms Compare Spending Bank B",
+			"id": "4d89e92d-1c96-4455-b7d3-8179f668241a",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8082/api/v1/analytics/compare-spending/bank_B",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"api",
+						"v1",
+						"analytics",
+						"compare-spending",
+						"bank_B"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Data Analytics ms get top customer",
+			"id": "7129a13b-c314-4863-be48-442c443b80ba",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8082/api/v1/analytics/top-customers?startDate=2023-01-01T00:00:00&endDate=2025-01-01T00:00:00&limit=5",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"api",
+						"v1",
+						"analytics",
+						"top-customers"
+					],
+					"query": [
+						{
+							"key": "startDate",
+							"value": "2023-01-01T00:00:00"
+						},
+						{
+							"key": "endDate",
+							"value": "2025-01-01T00:00:00"
+						},
+						{
+							"key": "limit",
+							"value": "5"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
