@@ -21,4 +21,16 @@ public interface FactTransactionRepository extends JpaRepository<FactTransaction
     // Custom query to count transactions by location
     @Query("SELECT f.locationCode, COUNT(f) FROM FactTransactionEntity f GROUP BY f.locationCode")
     List<Object[]> countTransactionsByLocation();
+
+    // Query for spending by category
+    @Query("SELECT f.category, SUM(f.amountStandard) FROM FactTransactionEntity f GROUP BY f.category")
+    List<Object[]> findSpendingByCategory();
+
+    // Query for average transaction amount, useful for comparative analysis
+    @Query("SELECT AVG(f.amountStandard) FROM FactTransactionEntity f")
+    BigDecimal findOverallAverageTransactionAmount();
+
+    // Ensure binding is explicit and add a check for the result
+    @Query("SELECT COALESCE(AVG(f.amountStandard), 0) FROM FactTransactionEntity f WHERE f.bankId = :bankId")
+    BigDecimal findAverageTransactionAmountByBank(@Param("bankId") String bankId);
 }

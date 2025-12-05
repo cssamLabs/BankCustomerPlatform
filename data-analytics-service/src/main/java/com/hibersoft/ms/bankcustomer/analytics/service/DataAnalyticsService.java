@@ -1,18 +1,23 @@
 package com.hibersoft.ms.bankcustomer.analytics.service;
 
-import com.hibersoft.ms.bankcustomer.analytics.repository.FactTransactionRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.hibersoft.ms.bankcustomer.analytics.repository.FactTransactionRepository;
 
 @Service
 public class DataAnalyticsService {
+
+        private static final Logger log = LoggerFactory.getLogger(DataAnalyticsService.class);
 
     @Autowired
     private FactTransactionRepository repository;
@@ -52,5 +57,33 @@ public class DataAnalyticsService {
                         result -> (String) result[0], // locationCode
                         result -> (Long) result[1]  // count
                 ));
+    }
+
+    public Map<String, BigDecimal> getSpendingByCategory() {
+            // Note the casting might need adjustment based on runtime types in Object[]
+            List<Object[]> results = repository.findSpendingByCategory();
+
+            return results.stream()
+                            .filter(result -> result[0] != null) // Filter out any rows where the category (result[0])
+                                                                 // is null
+                            .collect(Collectors.toMap(
+                                            result -> (String) result[0], // Category name
+                                            result -> (BigDecimal) result[1] // Sum of amount
+                            ));
+    }
+
+    public Map<String, BigDecimal> getComparativeAverageSpending(String bankId) {
+        log.info("Comparing average spending for bankId: {}", bankId);
+        BigDecimal overallAvg = repository.findOverallAverageTransactionAmount();
+        BigDecimal bankAvg = repository.findAverageTransactionAmountByBank(bankId);
+
+        log.debug("Overall Average: {}", overallAvg);
+        log.debug("Bank {} Average: {}", bankId, bankAvg);
+
+        Map<String, BigDecimal> comparison = new HashMap<>();
+        comparison.put("Overall_Platform_Average", overallAvg != null ? overallAvg : BigDecimal.ZERO);
+        comparison.put(bankId + "_Average", bankAvg != null ? bankAvg : BigDecimal.ZERO);
+
+        return comparison;
     }
 }

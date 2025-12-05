@@ -1,5 +1,8 @@
 package com.hibersoft.ms.bankcustomer.simpledatamodeling.model;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -17,8 +20,13 @@ public class FactTransactionEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    // Simplified fields for demonstration
-    private String customerId; 
+    private String bankId;
+    private String customerId;
+    private LocalDateTime transactionTime;
+    private BigDecimal amountStandard;
     private String descriptionStandard;
     private String locationCode;
+    private String transactionType;
+    private boolean isValid;
+    private String category;
 }

@@ -1,15 +1,15 @@
 package com.hibersoft.ms.bankcustomer.analytics.model;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
-
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "FACT_TRANSACTIONS")
@@ -30,4 +30,5 @@ public class FactTransactionEntity {
     private String locationCode;
     private String transactionType;
     private boolean isValid;
+    private String category;
 }

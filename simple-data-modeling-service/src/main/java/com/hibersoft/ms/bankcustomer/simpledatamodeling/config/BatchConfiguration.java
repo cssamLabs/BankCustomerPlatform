@@ -1,10 +1,12 @@
 package com.hibersoft.ms.bankcustomer.simpledatamodeling.config;
 
-import com.hibersoft.ms.bankcustomer.simpledatamodeling.model.FactTransactionEntity;
-import com.hibersoft.ms.bankcustomer.simpledatamodeling.model.RawSourceData;
+import javax.sql.DataSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
+import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
@@ -13,19 +15,16 @@ import org.springframework.batch.item.database.JdbcCursorItemReader;
 import org.springframework.batch.item.database.JpaItemWriter;
 import org.springframework.batch.item.database.builder.JdbcCursorItemReaderBuilder;
 import org.springframework.batch.item.database.builder.JpaItemWriterBuilder;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.batch.core.configuration.annotation.StepScope;
-import javax.sql.DataSource;
+
+import com.hibersoft.ms.bankcustomer.simpledatamodeling.model.FactTransactionEntity;
+import com.hibersoft.ms.bankcustomer.simpledatamodeling.model.RawSourceData;
 
 import jakarta.persistence.EntityManagerFactory;
-import javax.sql.DataSource;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @Configuration
 @EnableBatchProcessing
@@ -66,18 +65,53 @@ public class BatchConfiguration {
     }
 
     // Processor: Simple pass-through with maximum logging
-    @Bean
-    public ItemProcessor<RawSourceData, FactTransactionEntity> processor() {
-        return rawData -> {
-            log.info("Processing RawSourceData: Account ID={}, Amount={}", rawData.getBankSpecificAccountId(), rawData.getAmount());
-            FactTransactionEntity fact = new FactTransactionEntity();
-            fact.setCustomerId("U_" + rawData.getBankSpecificAccountId()); // Simplified MDM
-            fact.setDescriptionStandard(rawData.getDescription());
-            fact.setLocationCode(rawData.getLocationCode());
-            log.debug("Mapped to Fact Entity for Customer: {}", fact.getCustomerId());
-            return fact;
-        };
-    }
+    // @Bean
+    // public ItemProcessor<RawSourceData, FactTransactionEntity> processor() {
+    // return rawData -> {
+    // log.info("Processing RawSourceData: Account ID={}, Amount={}",
+    // rawData.getBankSpecificAccountId(), rawData.getAmount());
+    // FactTransactionEntity fact = new FactTransactionEntity();
+    // fact.setCustomerId("U_" + rawData.getBankSpecificAccountId()); // Simplified
+    // MDM
+    // fact.setDescriptionStandard(rawData.getDescription());
+    // fact.setLocationCode(rawData.getLocationCode());
+    // fact.setTransactionTime(LocalDateTime.parse(rawData.getTransactionDate()));
+    // fact.setAmountStandard(new BigDecimal(rawData.getAmount()));
+
+    // fact.setTransactionType("DEBIT"); // Hardcoded Type
+    // fact.setBankId("BANK_A"); // Still hardcoded, but works for now
+    // // --- ADD CATEGORIZATION LOGIC ---
+    // fact.setCategory(categorizeTransaction(rawData.getDescription()));
+    // // --------------------------------
+    // log.debug("Mapped to Fact Entity for Customer: {} in Category: {}",
+    // fact.getCustomerId(), fact.getCategory());
+    // return fact;
+    // };
+    // }
+
+    // --- ADD HELPER METHOD ---
+    // private String categorizeTransaction(String description) {
+    // String lowerDesc = description.toLowerCase();
+    // if (lowerDesc.contains("utility") || lowerDesc.contains("hydro") ||
+    // lowerDesc.contains("bell") || lowerDesc.contains("rogers")) {
+    // return "Utilities";
+    // } else if (lowerDesc.contains("groceries") ||
+    // lowerDesc.contains("supermarket") || lowerDesc.contains("costco")) {
+    // return "Groceries";
+    // } else if (lowerDesc.contains("gas") || lowerDesc.contains("petrol") ||
+    // lowerDesc.contains("shell")) {
+    // return "Transport";
+    // } else if (lowerDesc.contains("online") || lowerDesc.contains("amazon") ||
+    // lowerDesc.contains("purchase")) {
+    // return "Shopping";
+    // } else if (lowerDesc.contains("dinner") || lowerDesc.contains("restaurant"))
+    // {
+    // return "Dining";
+    // } else {
+    // return "Other";
+    // }
+    // }
+    // -------------------------
 
     // Writer: Writes facts to FACT_TRANSACTIONS table (logging is handled by Spring Batch implicitly)
     @Bean

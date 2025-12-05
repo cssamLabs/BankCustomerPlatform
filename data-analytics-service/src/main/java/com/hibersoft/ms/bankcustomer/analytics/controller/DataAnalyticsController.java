@@ -1,17 +1,19 @@
 package com.hibersoft.ms.bankcustomer.analytics.controller;
 
-import com.hibersoft.ms.bankcustomer.analytics.service.DataAnalyticsService;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.Map;
+import com.hibersoft.ms.bankcustomer.analytics.service.DataAnalyticsService;
 
 @RestController
 @RequestMapping("/api/v1/analytics")
@@ -42,5 +44,17 @@ public class DataAnalyticsController {
     public ResponseEntity<Map<String, Long>> getCountsByLocation() {
         Map<String, Long> counts = analyticsService.getTransactionCountsByLocation();
         return ResponseEntity.ok(counts);
+    }
+
+    @GetMapping("/spending-by-category")
+    public ResponseEntity<Map<String, BigDecimal>> getSpendingByCategory() {
+        Map<String, BigDecimal> spending = analyticsService.getSpendingByCategory();
+        return ResponseEntity.ok(spending);
+    }
+
+    @GetMapping("/compare-spending/{bankId}")
+    public ResponseEntity<Map<String, BigDecimal>> compareSpending(@PathVariable String bankId) {
+        Map<String, BigDecimal> comparison = analyticsService.getComparativeAverageSpending(bankId.toUpperCase());
+        return ResponseEntity.ok(comparison);
     }
 }
