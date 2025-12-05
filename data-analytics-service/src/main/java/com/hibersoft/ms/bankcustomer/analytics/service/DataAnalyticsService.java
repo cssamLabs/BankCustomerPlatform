@@ -75,15 +75,22 @@ public class DataAnalyticsService {
     public Map<String, BigDecimal> getComparativeAverageSpending(String bankId) {
         log.info("Comparing average spending for bankId: {}", bankId);
         BigDecimal overallAvg = repository.findOverallAverageTransactionAmount();
-        BigDecimal bankAvg = repository.findAverageTransactionAmountByBank(bankId);
+        BigDecimal bankAvg = repository.findAverageTransactionAmountByBank(bankId.toUpperCase());
 
         log.debug("Overall Average: {}", overallAvg);
         log.debug("Bank {} Average: {}", bankId, bankAvg);
 
         Map<String, BigDecimal> comparison = new HashMap<>();
         comparison.put("Overall_Platform_Average", overallAvg != null ? overallAvg : BigDecimal.ZERO);
-        comparison.put(bankId + "_Average", bankAvg != null ? bankAvg : BigDecimal.ZERO);
+        comparison.put(bankId.toUpperCase() + "_Average", bankAvg != null ? bankAvg : BigDecimal.ZERO);
 
         return comparison;
     }
+
+    public BigDecimal getOverallPlatformAverage() {
+        BigDecimal overallAvg = repository.findOverallAverageTransactionAmount();
+        return overallAvg != null ? overallAvg : BigDecimal.ZERO;
+    }
+
+    
 }

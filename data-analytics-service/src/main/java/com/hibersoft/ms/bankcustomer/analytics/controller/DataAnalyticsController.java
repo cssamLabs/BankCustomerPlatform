@@ -52,9 +52,17 @@ public class DataAnalyticsController {
         return ResponseEntity.ok(spending);
     }
 
+    // New endpoint for the overall platform average
+    @GetMapping("/average-spending/overall")
+    public ResponseEntity<BigDecimal> getOverallPlatformAverage() {
+        BigDecimal overallAvg = analyticsService.getOverallPlatformAverage();
+        return ResponseEntity.ok(overallAvg);
+    }
+    
+
     @GetMapping("/compare-spending/{bankId}")
     public ResponseEntity<Map<String, BigDecimal>> compareSpending(@PathVariable String bankId) {
-        Map<String, BigDecimal> comparison = analyticsService.getComparativeAverageSpending(bankId.toUpperCase());
+        Map<String, BigDecimal> comparison = analyticsService.getComparativeAverageSpending(bankId);
         return ResponseEntity.ok(comparison);
     }
 }
