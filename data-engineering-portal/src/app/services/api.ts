@@ -2,12 +2,17 @@ import { Injectable } from '@angular/core';
 import { HttpClient, provideHttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+import { CustomerProfile, PredictionResponse } from '../models/segmentation.types';
+import { environment } from '../../environments/environment';
+
 @Injectable({
   providedIn: 'root',
 })
 export class Api {
-  private apiUrlAnalytics = 'http://localhost:8082/api/v1/analytics';
-  private apiUrlIngestion = 'http://localhost:8083/api/v1/ingestion';
+  private baseApiUrl = environment.apiUrl;
+  private apiUrlAnalytics = '${this.baseApiUrl}/api/v1/analytics';
+  private apiUrlIngestion = '${this.baseApiUrl}/api/v1/ingestion';
+  private apiUrlSegmentation = '${this.baseApiUrl}/api/v1/segmentation';
 
   constructor(private http: HttpClient) {}
 
@@ -30,5 +35,16 @@ export class Api {
 
   startIngestionForAllBanks(): Observable<any> {
     return this.http.post(`${this.apiUrlIngestion}/start-all`, {});
+  }
+
+  triggerModelRetraining(): Observable<any> {
+    return this.http.post(`${this.apiUrlSegmentation}/trigger-training`, {});
+  }
+
+  predictCustomerSegment(profiles: CustomerProfile[]): Observable<PredictionResponse> {
+    return this.http.post<PredictionResponse>(
+      `${this.apiUrlSegmentation}/predict-segment`,
+      profiles
+    );
   }
 }

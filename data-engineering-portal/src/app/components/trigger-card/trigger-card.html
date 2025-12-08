@@ -6,6 +6,9 @@
     <button mat-raised-button color="primary" (click)="runIngestion()" [disabled]="isLoading">
       Start Full Data Ingestion
     </button>
+    <button mat-raised-button color="warn" (click)="runModelRetrain()" style="margin-left: 10px;">
+      Run AI Model Retraining
+    </button>
     <mat-progress-spinner
       *ngIf="isLoading"
       mode="indeterminate"

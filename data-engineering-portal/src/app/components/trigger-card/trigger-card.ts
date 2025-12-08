@@ -39,4 +39,21 @@ export class TriggerCard {
       },
     });
   }
+
+  // Add a new method to trigger retraining
+  runModelRetrain(): void {
+    this.isLoading = true;
+    this.message = 'Model retraining initiated...';
+    this.apiService.triggerModelRetraining().subscribe({
+      next: (response) => {
+        this.message = response.message || 'Retraining started successfully.';
+        this.isLoading = false; // The backend returned 202 ACCEPTED immediately
+      },
+      error: (err) => {
+        this.message = 'Error initiating retraining.';
+        console.error(err);
+        this.isLoading = false;
+      },
+    });
+  }
 }

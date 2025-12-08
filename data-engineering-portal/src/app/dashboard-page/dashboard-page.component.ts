@@ -13,6 +13,7 @@ import { Api as ApiService } from '../services/api';
 import { Observable } from 'rxjs';
 
 import { TriggerCard as TriggerCardComponent } from '../components/trigger-card/trigger-card';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard-page',
@@ -29,6 +30,7 @@ import { TriggerCard as TriggerCardComponent } from '../components/trigger-card/
     TriggerCardComponent,
     MatCardModule,
     HttpClientModule,
+    RouterModule,
   ],
 })
 export class DashboardPageComponent implements OnInit {

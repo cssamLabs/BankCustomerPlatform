@@ -1,4 +1,4 @@
-package com.hibersoft.ms.bankcustomer.analytics; // Make sure this matches your package structure
+package com.hibersoft.ms.bankcustomer.datageneration; // Make sure this matches your package structure
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;

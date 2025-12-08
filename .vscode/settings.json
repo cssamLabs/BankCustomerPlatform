@@ -1,0 +1,6 @@
+{
+  "terminal.integrated.defaultProfile.osx": "bash",
+  "editor.defaultFoldingRangeProvider": "ms-python.python",
+  "notebook.defaultFormatter": "ms-python.python",
+  "databricks.sensitiveValueStore": "VSCodeSettings"
+}

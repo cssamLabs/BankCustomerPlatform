@@ -119,6 +119,33 @@ services:
     networks:
       - bank-network
   # ----------------------------------------------------
+  customer-segmentation-app:
+    container_name: customer-segmentation-app
+    image: hs-bank-customer-segmentation-service:latest
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    volumes:
+      # This line maps a folder named 'app-data' on your host to the container's data path
+      - ./local_data_staging:/app/data/db 
+    environment:
+      FLASK_ENV: production
+    networks:
+      - bank-network
+  
+  data-engineering-portal:
+    image: hs-bank-customer-data-engineering-portal:latest
+    container_name: data-engineering-portal
+    restart: unless-stopped
+    ports:
+      - "80:80" # Maps local port 80 to the container port
+    depends_on:
+      # Ensure frontend starts after all core services are running
+      # - customer-segmentation-app
+      - simple-data-modeling-app
+      - data-analytics-app
+      - data-generation-app
+      # ... other java services ..
 
 networks:
   bank-network:

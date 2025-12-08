@@ -9,10 +9,13 @@ import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.batch.core.Step;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.hibersoft.ms.bankcustomer.simpledatamodeling.model.RawSourceData;
 import com.hibersoft.ms.bankcustomer.simpledatamodeling.model.FactTransactionEntity;
 import com.hibersoft.ms.bankcustomer.simpledatamodeling.model.RawSourceData;
+import com.hibersoft.ms.bankcustomer.simpledatamodeling.service.AimlServiceCaller;
+
 
 @Component
 @StepScope // Make it Step Scoped to inject job parameters
@@ -21,6 +24,9 @@ public class EnrichmentItemProcessor implements ItemProcessor<RawSourceData, Fac
     // Inject the bankId using @Value and a Job Parameter placeholder
     @Value("#{jobParameters['bankId']}")
     private String bankId;
+
+    @Autowired
+    private AimlServiceCaller aimlService;
 
     // ... (Add the categorizeTransaction helper method here from
     // BatchConfiguration) ...
@@ -63,6 +69,14 @@ public class EnrichmentItemProcessor implements ItemProcessor<RawSourceData, Fac
 
         fact.setCustomerId("U_" + rawData.getBankSpecificAccountId());
         fact.setCategory(categorizeTransaction(rawData.getDescription()));
+
+        // Call the AI/ML service (Conceptual for now) ---
+        // The processor only has single transactions, so we can't aggregate yet. 
+        // This call must be deferred until data is aggregated.
+        // In a real implementation: The batch job *first* inserts data into the fact table, 
+        // and a *second* job/step aggregates the data and calls the AI/ML service in bulk.
+        // and we can use a placeholder for the segment:
+        fact.setCustomerSegment("Not Segmented Yet"); 
 
         return fact;
     }

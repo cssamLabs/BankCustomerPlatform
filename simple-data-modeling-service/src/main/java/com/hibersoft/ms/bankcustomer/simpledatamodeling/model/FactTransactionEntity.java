@@ -29,4 +29,5 @@ public class FactTransactionEntity {
     private String transactionType;
     private boolean isValid;
     private String category;
+    private String customerSegment;
 }

@@ -1,0 +1,35 @@
+# Use an official Python runtime as a parent image
+FROM python:3.14-slim
+
+# Set the working directory in the container
+WORKDIR /usr/src/app
+
+# Copy the requirements file and install dependencies
+COPY requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy the actual trained model files and application code
+COPY kmeans_model.joblib scaler.joblib ./
+# Copy the application code and placeholder model files
+COPY app.py ./
+COPY app.py train_model.py ./ 
+# We need placeholder model files for the build to pass initially
+# RUN touch kmeans_model.joblib scaler.joblib
+
+# Create a non-root user and switch to it
+RUN groupadd -r appgroup && useradd -r -g appgroup appuser
+USER appuser
+
+# Expose port 5000
+EXPOSE 5000
+
+# Command to run the application using a production server (Gunicorn is better than app.run(debug=True))
+# First, install gunicorn: add gunicorn to requirements.txt and run pip install again
+# requirements.txt needs 'gunicorn==22.0.0'
+# app.py needs to run gunicorn (or we use a start.sh script)
+# For simplicity, let's use the CMD to run the debug server for now:
+# CMD ["python", "app.py"]
+
+# Command to run the application using Gunicorn
+# Gunicorn runs the 'app' object within the 'app' module file
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "app:app"]
