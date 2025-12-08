@@ -69,7 +69,7 @@ services:
   # --- DATA GENERATION SERVICE ---
   data-generation-app:
     image: hs-bank-customer-datageneration-services:0.0.1-SNAPSHOT # Use the image name we defined in the Dockerfile build step earlier
-    container_name: datageneration-app
+    container_name: data-generation-service
     ports:
       - "8081:8080" # Maps the internal port 8080 to external port 8081
     depends_on:
@@ -85,7 +85,7 @@ services:
   # --- DATA ANALYTICS SERVICE ---
   data-analytics-app:
     image: hs-bank-customer-platform-analytics-service:0.0.1-SNAPSHOT # Name from the bootBuildImage task
-    container_name: data-analytics-app
+    container_name: data-analytics-service
     ports:
       - "8082:8080" # Maps the internal port 8080 to external port 8082
     depends_on:
@@ -101,7 +101,7 @@ services:
 # --- SIMPLE DATA MODELLING SERVICE ---
   simple-data-modeling-app:
     image: hs-bank-customer-simpledatamodeling-services:0.0.1-SNAPSHOT # Use the image name from the bootBuildImage task
-    container_name: simple-data-modeling-app
+    container_name: simple-data-modeling-service
     ports:
       - "8083:8080" # Keep the same port
     depends_on:
@@ -120,7 +120,7 @@ services:
       - bank-network
   # ----------------------------------------------------
   customer-segmentation-app:
-    container_name: customer-segmentation-app
+    container_name: customer-segmentation-service
     image: hs-bank-customer-segmentation-service:latest
     restart: unless-stopped
     ports:
