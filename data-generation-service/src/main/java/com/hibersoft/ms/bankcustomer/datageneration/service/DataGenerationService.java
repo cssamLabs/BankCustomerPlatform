@@ -53,7 +53,7 @@ public class DataGenerationService {
         }
 
         // --- Use dynamic table name insertion via JdbcTemplate ---
-        String tableName = bankId.toLowerCase() + "_transactions";
+        String tableName = "bank_" + bankId.toLowerCase() + "_transactions";
         String sql = "INSERT INTO " + tableName + " (bank_specific_account_id, transaction_date, amount, description, location_code) VALUES (?, ?, ?, ?, ?)";
         
         List<Object[]> batchArgs = data.stream().map(entity -> new Object[] {

@@ -1,0 +1,25 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Initiate Data Modeling Pipeline</mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content>
+    <p>This triggers the batch process for modeling raw data into the analytical fact tables.</p>
+
+    <button mat-raised-button color="primary" (click)="triggerDataIngestion()">
+      Run Data Modeling Job (All Banks)
+    </button>
+
+    <mat-spinner *ngIf="isLoading" [diameter]="20"></mat-spinner>
+    <p *ngIf="message">{{ message }}</p>
+
+    <button
+      mat-raised-button
+      color="accent"
+      (click)="triggerModelRetraining()"
+      style="margin-left: 10px"
+    >
+      Run AI Model Retraining Job
+    </button>
+  </mat-card-content>
+</mat-card>

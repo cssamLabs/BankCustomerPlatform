@@ -1,12 +1,14 @@
 <div class="dashboard-container">
-  <h1>Data Engineering Portal</h1>
+  <h1>Retail Banking Customer Behaviour Analytics and AI Prediction Portal</h1>
 
-  <button mat-raised-button color="accent" routerLink="/predict">
-    Go to AI Predictor
+  <button mat-flat-button color="primary" routerLink="/generate-data" style="margin-left: 10px;">
+    <mat-icon>data_table</mat-icon> Data Generation
   </button>
+  
 
+  <button mat-raised-button color="default" routerLink="/predict"> <mat-icon>model_training</mat-icon> Go to AI Predictor </button>
 
-  <app-trigger-card (jobTriggered)="fetchData()"></app-trigger-card>
+   <app-data-modeling-page (jobTriggered)="fetchData()"></app-data-modeling-page>
 
   <div class="card-container">
     <mat-card>

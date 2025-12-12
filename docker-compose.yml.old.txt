@@ -1,0 +1,167 @@
+services:
+  # ... (postgres-db, zookeeper, kafka services) ...
+  postgres-db:
+    image: postgres:14-alpine
+    container_name: postgres-db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: datamodelingdb
+      POSTGRES_USER: youruser
+      POSTGRES_PASSWORD: yourpassword
+    # Use a volume for data persistence even if the container is removed
+    volumes:
+      - postgres-data-volume:/var/lib/postgresql/data
+    networks:
+      bank-network:
+        ipv4_address: 172.18.0.7
+
+  # Placeholder for Kafka and Zookeeper (you would need full configs for these)
+  # kafka:
+  #   image: confluentinc/cp-kafka:7.0.0
+  #   container_name: kafka
+  #   depends_on:
+  #     - zookeeper
+  #   ports:
+  #     - "9092:9092" # External port for host machine access
+  #   environment:
+  #     KAFKA_BROKER_ID: 1
+  #     KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+  #     KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+  #     KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+  #     KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+  #     KAFKA_LISTENERS: INTERNAL://kafka:29092,EXTERNAL://localhost:9092
+  #     KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:29092,EXTERNAL://localhost:9092
+  #     # ----------------------------------------------------
+  #   networks:
+  #     - bank-network
+
+  # zookeeper:
+  #   image: confluentinc/cp-zookeeper:7.0.0
+  #   container_name: zookeeper
+  #   environment:
+  #     ZOOKEEPER_CLIENT_PORT: 2181
+  #     ZOOKEEPER_TICK_TIME: 2000
+  #   networks:
+  #     - bank-network
+
+  # --- DATA MODELING SERVICE ---
+  # datamodeling-app:
+  #   image: hs-bank-customer-datamodeling-services:0.0.1-SNAPSHOT # Use the image name we defined in the Dockerfile build step earlier
+  #   container_name: datamodeling-app
+  #   ports:
+  #     - "8080:8080"
+  #   environment:
+  #     # Pass the host IP for the Kafka producer (if the app acts as a producer too)
+  #     SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+  #     SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-db:5432/datamodelingdb
+  #     SPRING_DATASOURCE_USERNAME: youruser # Update these credentials
+  #     SPRING_DATASOURCE_PASSWORD: yourpassword # Update these credentials
+  #   depends_on:
+  #     - postgres-db
+  #     - kafka
+  #   # Mount a local directory to a container path for simulating staged data input/output
+  #   volumes:
+  #     #  - ./local_data_staging:/opt/data/staging
+  #     - /Users/chandimasamaraweera/DevelopmentEnvs/BankCustomerPlatform/local_data_staging:/opt/data/staging
+  #   networks:
+  #     - bank-network
+  # -------------------------------------------
+  # --- DATA GENERATION SERVICE ---
+  data-generation-app:
+    image: hs-bank-customer-datageneration-services:0.0.1-SNAPSHOT # Use the image name we defined in the Dockerfile build step earlier
+    container_name: data-generation-app
+    ports:
+      - "8081:8080" # Maps the internal port 8080 to external port 8081
+    depends_on:
+      - postgres-db
+    environment:
+      # Use the internal service name for the DB connection
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-db:5432/datamodelingdb
+      SPRING_DATASOURCE_USERNAME: youruser # Use your credentials
+      SPRING_DATASOURCE_PASSWORD: yourpassword # Use your credentials
+    networks:
+      bank-network:
+        ipv4_address: 172.18.0.5
+  # -------------------------------------------
+  # --- DATA ANALYTICS SERVICE ---
+  data-analytics-app:
+    image: hs-bank-customer-platform-analytics-service:0.0.1-SNAPSHOT # Name from the bootBuildImage task
+    container_name: data-analytics-app
+    ports:
+      - "8082:8080" # Maps the internal port 8080 to external port 8082
+    depends_on:
+      - postgres-db
+    environment:
+      SPRING_PROFILES_ACTIVE: test # Activate the application-test.properties file
+      # Use the internal service name for the DB connection
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-db:5432/datamodelingdb
+      SPRING_DATASOURCE_USERNAME: youruser # Use your credentials
+      SPRING_DATASOURCE_PASSWORD: yourpassword # Use your credentials
+    networks:
+      bank-network:
+        ipv4_address: 172.18.0.6
+  # -------------------------------------------
+# --- SIMPLE DATA MODELLING SERVICE ---
+  simple-data-modeling-app:
+    image: hs-bank-customer-simpledatamodeling-services:0.0.1-SNAPSHOT # Use the image name from the bootBuildImage task
+    container_name: simple-data-modeling-app
+    ports:
+      - "8083:8080" # Keep the same port
+    depends_on:
+      - postgres-db
+      # - kafka
+    environment:
+      # Use the internal service names for connections
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-db:5432/datamodelingdb
+      SPRING_DATASOURCE_USERNAME: youruser # Use your credentials
+      SPRING_DATASOURCE_PASSWORD: yourpassword # Use your credentials
+      # SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+    volumes:
+      # Keep your staging data volume mount
+      - ./local_data_staging:/opt/data/staging
+    networks:
+      bank-network:
+        ipv4_address: 172.18.0.4
+  # ----------------------------------------------------
+  customer-segmentation-app:
+    container_name: customer-segmentation-app
+    image: hs-bank-customer-segmentation-service:latest
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    volumes:
+      # This line maps a folder named 'app-data' on your host to the container's data path
+      - ./local_data_staging:/app/data/db 
+    environment:
+      FLASK_ENV: production
+      DATABASE_URL: postgresql://youruser:yourpassword@postgres-db:5432/datamodelingdb
+    networks:
+      bank-network:
+        ipv4_address: 172.18.0.3
+  
+  data-engineering-portal:
+    image: hs-bank-customer-data-engineering-portal:latest
+    container_name: data-engineering-portal
+    restart: unless-stopped
+    ports:
+      - "80:80" # Maps local port 80 to the container port
+    depends_on:
+      # Ensure frontend starts after all core services are running
+      - customer-segmentation-app
+      - simple-data-modeling-app
+      - data-analytics-app
+      - data-generation-app
+      # ... other java services ..
+
+networks:
+  bank-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.18.0.0/24
+
+# Define volumes and networks
+volumes:
+  postgres-data-volume:
+  local_data_staging:

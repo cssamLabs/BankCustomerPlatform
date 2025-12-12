@@ -1,0 +1,22 @@
+swagger: '2.0'
+info:
+  title: banking-platform-gateway
+  version: 1.0.0
+x-google-endpoints:
+- name: "bankingplatform.hibersoft.net"
+  allowCors: true # Enables central CORS management
+
+paths:
+  /api/v1/analytics/{path}:
+    get:
+      x-google-backend:
+        # Use the actual GCP Cloud Run URL (e.g., https://analytics-service-xxxx-uc.a.run.app)
+        address: https://<ANALYTICS_SERVICE_URL>.run.app{path} 
+      responses: { '200': { description: 'A successful response' } }
+  
+  /api/v1/segmentation/{path}:
+    post:
+      x-google-backend:
+        address: https://<SEGMENTATION_SERVICE_URL>.run.app{path}
+      responses: { '200': { description: 'A successful response' } }
+  # ... Add paths for ingestion/modeling services ...

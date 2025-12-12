@@ -60,24 +60,24 @@ Angular CLI does not come with an end-to-end testing framework by default. You c
    bash
 
    ```
-   docker build . -t data-engineering-portal:latest
+   docker build . -t hs-bank-customer-data-portal:latest
    ```
 2. **Stop and remove the old container:**
    bash
 
    ```
-   docker stop data-engineering-portal
-   docker rm data-engineering-portal
+   docker stop bank-data-portal
+   docker rm bank-data-portal
    ```
 3. **Run the new container:**
    bash
 
    ```
-   docker run -d -p 80:80 --name data-engineering-portal data-engineering-portal:latest
+   docker run -d -p 80:80 --name bank-data-portal hs-bank-customer-data-portal:latest
    ```
 
 ```
-docker-compose up --build -d data-engineering-portal
+docker-compose up --build -d bank-data-portal
 ```
 
 

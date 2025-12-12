@@ -7,4 +7,4 @@ pluginManagement {
     }
 }
 
-rootProject.name = 'hs-bank-customer-datageneration-services'
+rootProject.name = 'hs-bank-customer-data-generation'

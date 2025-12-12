@@ -9,12 +9,25 @@ import logging
 
 logging.basicConfig(level=logging.INFO)
 
-# --- Database Configuration (use environment variables for security) ---
-DB_URL = os.environ.get("DATABASE_URL", "postgresql://youruser:yourpassword@127.0.0.1:5432/datamodelingdb")
-
-ENGINE = create_engine(DB_URL)
 FEATURES = ['utilities', 'groceries', 'transport', 'shopping', 'dining', 'other']
 NUM_CLUSTERS = 4 # Define how many lifestyle segments you want
+
+# --- Database Configuration (use environment variables for security) ---
+# DB_URL = os.environ.get("DATABASE_URL", "postgresql://youruser:yourpassword@127.0.0.1:5432/datamodelingdb")
+
+def get_db_connection():
+    # This must read from the environment variable provided by Docker Compose
+    db_url = os.environ.get('DATABASE_URL') 
+    
+    if not db_url:
+        # If the variable is somehow missed, this default might cause issues
+        print("DATABASE_URL environment variable not found!")
+        # A safer default for local development is often useful, but in Docker, 
+        # the service name works better than localhost
+        db_url = "postgresql://youruser:yourpassword@postgres-db:5432/datamodelingdb"
+
+    engine = create_engine(db_url)
+    return engine
 
 def fetch_data_for_training():
     """
@@ -39,7 +52,9 @@ def fetch_data_for_training():
     HAVING
         SUM(amount_standard) > 0; -- Only customers with spending
     """
-    df = pd.read_sql_query(sql_query, ENGINE)
+    engine = get_db_connection()
+    df = pd.read_sql_query(sql_query, engine)
+    
     logging.info(f"Fetched data for {len(df)} customers.")
     return df
 

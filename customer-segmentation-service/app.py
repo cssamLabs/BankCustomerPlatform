@@ -25,7 +25,7 @@ except FileNotFoundError:
     model = None
     scaler = None
 
-@app.route('{API_PREFIX}/predict-segment', methods=['POST'])
+@app.route(f'{API_PREFIX}/predict-segment', methods=['POST'])
 def predict():
     if model is None or scaler is None:
         return jsonify({"error": "Model not ready for predictions. Please trigger training first."}), 503
@@ -45,7 +45,7 @@ def predict():
     return jsonify({"predictions": predictions.tolist()})
 
 
-@app.route('{API_PREFIX}/trigger-training', methods=['POST'])
+@app.route(f'{API_PREFIX}/trigger-training', methods=['POST'])
 def trigger_training():
     """
     Starts model training in a background thread and returns immediately.

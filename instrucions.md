@@ -20,6 +20,17 @@ bash
 docker run -d -p 8080:80 --name angular-portal-container data-engineering-portal-frontend:latest
 ```
 
+Step 1: Remove the Conflicting Network
+
+Run the following command to remove the exact network instance that is causing the problem:
+
+bash
+
+```
+docker network rm bankcustomerplatform_bank-network
+```
+
+
 ## Cloud Deployment
 
 To deploy your application to GCP, where microservice URLs are dynamic (e.g., in Cloud Run), you must modify your CORS configurations to avoid hardcoding specific URLs. The best practice is to manage CORS centrally using an API Gateway or by dynamically setting the `Access-Control-Allow-Origin` header in your services based on allowed patterns.\*\* \*\*

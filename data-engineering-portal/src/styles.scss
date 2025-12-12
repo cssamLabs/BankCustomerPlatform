@@ -1,0 +1,25 @@
+@use '@angular/material' as mat;
+@import '@angular/material/theming';
+
+// Define a custom theme primary/accent colors (Orange/Yellow palette)
+$banking-platform-primary: mat.define-palette(mat.$orange-palette, 700, 500, 900);
+$banking-platform-accent: mat.define-palette(mat.$amber-palette, A200, A100, A400);
+
+$banking-platform-theme: mat.define-light-theme(
+  (
+    color: (
+      primary: $banking-platform-primary,
+      accent: $banking-platform-accent,
+    ),
+  )
+);
+
+// Apply the custom theme
+@include mat.all-component-themes($banking-platform-theme);
+
+/* Global Card Styling for better visuals */
+mat-card {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  margin: 16px;
+}

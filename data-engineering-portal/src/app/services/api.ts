@@ -10,9 +10,10 @@ import { environment } from '../../environments/environment';
 })
 export class Api {
   private baseApiUrl = environment.apiUrl;
-  private apiUrlAnalytics = '${this.baseApiUrl}/api/v1/analytics';
-  private apiUrlIngestion = '${this.baseApiUrl}/api/v1/ingestion';
-  private apiUrlSegmentation = '${this.baseApiUrl}/api/v1/segmentation';
+  private apiUrlGeneration = `${this.baseApiUrl}/api/v1/generate`;
+  private apiUrlAnalytics = `${this.baseApiUrl}/api/v1/analytics`;
+  private apiUrlIngestion = `${this.baseApiUrl}/api/v1/simple-ingestion`;
+  private apiUrlSegmentation = `${this.baseApiUrl}/api/v1/segmentation`;
 
   constructor(private http: HttpClient) {}
 
@@ -46,5 +47,10 @@ export class Api {
       `${this.apiUrlSegmentation}/predict-segment`,
       profiles
     );
+  }
+
+  generateDataForBank(bankId: string, count: number): Observable<any> {
+    const url = `${this.apiUrlGeneration}/bank/${bankId}?count=${count}`;
+    return this.http.post(url, {}); // The backend is a POST with an empty body
   }
 }

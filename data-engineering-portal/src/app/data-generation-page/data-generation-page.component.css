@@ -1,0 +1,44 @@
+/* Styling for the main card container */
+mat-card {
+  max-width: 600px; /* Keep the card a reasonable size on large screens */
+  margin: 20px auto; /* Center the card horizontally */
+  padding: 20px;
+}
+
+/* Ensure form fields take full width */
+mat-form-field {
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+/* Style the buttons and provide some margin */
+button {
+  margin-right: 10px;
+  margin-bottom: 10px; /* Add margin to bottom for wrapping on small screens */
+}
+
+/* Container for the spinner and message area */
+div {
+  display: flex;
+  align-items: center;
+  margin-top: 15px;
+}
+
+/* Add margin to the message paragraph */
+p {
+  margin-left: 10px;
+  font-style: italic;
+  color: #555;
+}
+
+/* Position the back-to-dashboard icon button in the top right of the header */
+mat-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+mat-card-title {
+  display: flex;
+  align-items: center;
+}

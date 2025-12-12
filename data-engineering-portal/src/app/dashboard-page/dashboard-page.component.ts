@@ -11,8 +11,9 @@ import { CommonModule, KeyValuePipe } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { Api as ApiService } from '../services/api';
 import { Observable } from 'rxjs';
+import { DataModelingPageComponent } from '../data-modeling-page/data-modeling-page.component';
 
-import { TriggerCard as TriggerCardComponent } from '../components/trigger-card/trigger-card';
+// import { TriggerCard as TriggerCardComponent } from '../components/trigger-card/trigger-card';
 import { RouterModule } from '@angular/router';
 
 @Component({
@@ -27,7 +28,8 @@ import { RouterModule } from '@angular/router';
     MatMenuModule,
     MatIconModule,
     MatButtonModule,
-    TriggerCardComponent,
+    DataModelingPageComponent,
+    // TriggerCardComponent,
     MatCardModule,
     HttpClientModule,
     RouterModule,
@@ -47,6 +49,7 @@ export class DashboardPageComponent implements OnInit {
   }
 
   fetchData(): void {
+    console.log("Fetching new data from backend for dashboard...");
     this.countsByLocation$ = this.apiService.getCountsByLocation();
     this.spendingByCategory$ = this.apiService.getSpendingByCategory();
     this.bankAAverages$ = this.apiService.getComparativeSpending('BANK_A');

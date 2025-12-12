@@ -5,7 +5,7 @@
     "changeOrigin": true,
     "logLevel": "debug"
   },
-  "/api/v1/ingestion": {
+  "/api/v1/simple-ingestion": {
     "target": "http://localhost:8083",
     "secure": false,
     "changeOrigin": true,
@@ -13,6 +13,12 @@
   },
   "/api/v1/segmentation": {
     "target": "http://localhost:5000",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  },
+  "/api/v1/generate": {
+    "target": "http://localhost:8081",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug"

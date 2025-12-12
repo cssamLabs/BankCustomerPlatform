@@ -1,0 +1,42 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Data Generation & Ingestion</mat-card-title>
+    <button mat-icon-button routerLink="/">
+      <mat-icon>dashboard</mat-icon>
+    </button>
+  </mat-card-header>
+  <mat-card-content>
+    <mat-form-field appearance="fill">
+      <mat-label>Number of Records</mat-label>
+      <input
+        matInput
+        id="record-count-input"
+        type="number"
+        [(ngModel)]="count"
+        required
+        min="1"
+        step="1"
+      />
+    </mat-form-field>
+
+    <p>Trigger generation for a specific bank:</p>
+
+    <button mat-raised-button color="primary" (click)="triggerGeneration('A')">
+      Generate for Bank A
+    </button>
+
+    <button
+      mat-raised-button
+      color="accent"
+      (click)="triggerGeneration('B')"
+      style="margin-left: 10px"
+    >
+      Generate for Bank B
+    </button>
+
+    <div style="margin-top: 15px">
+      <mat-spinner *ngIf="isLoading" [diameter]="20"></mat-spinner>
+      <p *ngIf="message">{{ message }}</p>
+    </div>
+  </mat-card-content>
+</mat-card>

@@ -35,7 +35,7 @@ Navigate to your Python project directory and build the image. This process shou
 bash
 
 ```
-docker build . -t hs-bank-customer-segmentation-service:latest
+docker build . -t hs-bank-customer-data-segmentation:latest
 ```
 
 Step 2: Deploy only the Segmentation App (using Docker Compose)
@@ -45,7 +45,7 @@ Go to your main project directory (where `docker-compose.yml` is located) and de
 bash
 
 ```
-docker compose up --build -d his-bank-customer-segmentation-app
+docker compose up --build -d data-segmentation-app
 ```
 
 Verification
@@ -55,5 +55,5 @@ Once the container starts, check its logs immediately:
 bash
 
 ```
-docker logs customer-segmentation-app
+docker logs data-segmentation-app
 ```

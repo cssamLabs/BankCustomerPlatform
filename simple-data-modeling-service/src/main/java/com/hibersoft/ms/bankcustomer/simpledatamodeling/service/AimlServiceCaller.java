@@ -3,6 +3,7 @@ package com.hibersoft.ms.bankcustomer.simpledatamodeling.service;
 import com.hibersoft.ms.bankcustomer.simpledatamodeling.model.CustomerProfile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.math.BigDecimal;
 import java.util.Collections;
@@ -14,8 +15,16 @@ import java.util.Map;
 public class AimlServiceCaller {
 
     // Use the Docker internal service name and port here
-    private final String segmentationServiceUrl = "http://customer-segmentation-app:5000/api/v1/segmentation/predict-segment";
+    // private final String segmentationServiceUrl = "http://customer-segmentation-app:5000/api/v1/segmentation/predict-segment";
     private final RestTemplate restTemplate = new RestTemplate();
+
+    // Inject the URL from application.properties
+    @Value("${app.segmentation-service.url}")
+    private String segmentationServiceUrl; // This property is now dynamic
+
+    // public AimlServiceCaller(RestTemplate restTemplate) {
+    //     this.restTemplate = restTemplate;
+    // }
 
     public Integer getCustomerSegment(Map<String, BigDecimal> spendingProfile) {
         // Convert the BigDecimal map to the string-based format the Python API expects

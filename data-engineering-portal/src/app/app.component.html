@@ -1,0 +1,26 @@
+<mat-tab-group mat-align-right dynamicHeight="true" color="accent" backgroundColor="primary">
+  <mat-tab label="Analytics Dashboard">
+    <ng-template matTabContent>
+      <app-dashboard-page></app-dashboard-page>
+    </ng-template>
+  </mat-tab>
+
+  <mat-tab label="Data Modeling">
+    <ng-template matTabContent>
+      <!-- A new component will go here -->
+      <app-data-modeling-page></app-data-modeling-page>
+    </ng-template>
+  </mat-tab>
+
+  <mat-tab label="Data Generation">
+    <ng-template matTabContent>
+      <app-data-generation-page></app-data-generation-page>
+    </ng-template>
+  </mat-tab>
+
+  <mat-tab label="ML Prediction">
+    <ng-template matTabContent>
+      <app-segment-predictor></app-segment-predictor>
+    </ng-template>
+  </mat-tab>
+</mat-tab-group>
